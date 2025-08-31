@@ -1,100 +1,40 @@
+[![GitHub release](https://img.shields.io/github/release/UnitVectorY-Labs/gologhttpjson.svg)](https://github.com/UnitVectorY-Labs/gologhttpjson/releases/latest) [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT) [![Active](https://img.shields.io/badge/Status-Active-green)](https://guide.unitvectorylabs.com/bestpractices/status/#active) [![Go Report Card](https://goreportcard.com/badge/github.com/UnitVectorY-Labs/gologhttpjson)](https://goreportcard.com/report/github.com/UnitVectorY-Labs/gologhttpjson)
+
 # gologhttpjson
 
-A lightweight HTTP server for logging JSON requests with configurable features.
+A lightweight HTTP server that logs HTTP requests containing JSON payloads, with optional header logging and environment-based metadata.
 
-## Description
+## Purpose
 
-This application accepts POST requests with JSON payloads and logs them in a structured format. It's designed to be simple and focused on logging JSON data with optional header and metadata logging.
+This application captures incoming HTTP POST requests and logs the JSON body, request path, optional headers, and environment variable metadata. It is useful for debugging, testing, and local development when you want to inspect JSON payloads and related request context.
 
-## Features
+**Why use this?** This tool provides a simple way to log JSON requests for debugging, testing, and inspection. It allows for opt-in logging of request headers and provides a mechanism to inject metadata from environment variables.
 
-- **JSON Body Logging**: Captures and logs the JSON payload in the `body` field
-- **Path Logging**: Records the HTTP path in the `path` field
-- **Optional Header Logging**: Enable with `LOG_HEADERS` environment variable
-- **Metadata Logging**: Log environment variables prefixed with `METADATA_` under the `metadata` field
-- **Request Validation**: Only accepts POST requests with valid JSON payloads
-
-## Environment Variables
-
-- `PORT`: Server port (default: 8080)
-- `LOG_HEADERS`: Set to any non-empty value to enable HTTP header logging
-- `METADATA_*`: Any environment variable prefixed with `METADATA_` will be logged under metadata
+**Should I run this in production?** No. This could expose sensitive information from headers and payloads. It is intended strictly for debugging, development, and testing.
 
 ## Usage
 
-### Basic Usage
+The latest gologhttpjson Docker image is available for deployment from GitHub Packages at [gologhttpjson on GitHub Packages](https://github.com/UnitVectorY-Labs/gologhttpjson/pkgs/container/gologhttpjson).
+
+You can deploy this application locally with Docker:
+
 ```bash
-go run main.go
+docker run -p 8080:8080 ghcr.io/unitvectory-labs/gologhttpjson:latest
 ```
 
-### With Header Logging
-```bash
-LOG_HEADERS=true go run main.go
-```
+## Example Log Output
 
-### With Metadata
-```bash
-METADATA_VERSION=1.0.0 METADATA_ENVIRONMENT=production LOG_HEADERS=true go run main.go
-```
+All responses return an HTTP 200 status code with a body of `OK`. This application is designed to log request payloads for inspection.
 
-## API
+The log output is structured as JSON with the following attributes:
 
-### POST /any-path
-Accepts JSON payload and logs it.
+- `body` – the original JSON payload
+- `path` – the HTTP request path
+- `headers` – optional, logged if `LOG_HEADERS` is set
+- `metadata` – optional, populated from environment variables prefixed with `METADATA_`
 
-**Request:**
-- Method: POST
-- Content-Type: application/json
-- Body: Any valid JSON
+Example (pretty-printed for readability):
 
-**Response:**
-- Status: 200 OK
-- Body: "OK\n"
-
-**Error Responses:**
-- 400 Bad Request: For non-POST requests or invalid JSON
-- 500 Internal Server Error: For server-side errors
-
-## Log Format
-
-The application logs entries in JSON format with the following structure:
-
-```json
-{
-  "body": {...},           // The original JSON payload
-  "headers": {...},        // HTTP headers (if LOG_HEADERS is set)
-  "metadata": {...},       // Environment variables with METADATA_ prefix
-  "path": "/example/path"  // The requested HTTP path
-}
-```
-
-## Examples
-
-### Simple JSON Request
-```bash
-curl -X POST http://localhost:8080/test \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Hello, World!"}'
-```
-
-**Logged output:**
-```json
-{"body":{"message":"Hello, World!"},"path":"/test"}
-```
-
-### With Headers and Metadata
-```bash
-# Start server with headers and metadata
-METADATA_SERVICE=api METADATA_VERSION=1.0 LOG_HEADERS=true go run main.go
-
-# Make request
-curl -X POST http://localhost:8080/api/webhook \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer token123" \
-  -d '{"event": "user.created", "data": {"id": 123}}'
-```
-
-**Logged output:**
 ```json
 {
   "body": {
@@ -113,3 +53,11 @@ curl -X POST http://localhost:8080/api/webhook \
   "path": "/api/webhook"
 }
 ```
+
+## Configuration
+
+This application runs as a Docker container or via Go directly. It supports the following environment variables:
+
+- `PORT` – the port the application listens on (default `8080`)
+- `LOG_HEADERS` – set to any non-empty value to enable logging of HTTP headers
+- `METADATA_*` – any environment variable prefixed with `METADATA_` will be logged under the `metadata` field
