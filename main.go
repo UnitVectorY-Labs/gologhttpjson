@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -72,8 +71,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Log the JSON
-	log.Println(string(logJSON))
+	// Log the JSON without timestamp
+	os.Stdout.Write(logJSON)
+	os.Stdout.WriteString("\n")
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
