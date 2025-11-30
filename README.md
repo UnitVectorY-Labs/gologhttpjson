@@ -1,4 +1,4 @@
-[![GitHub release](https://img.shields.io/github/release/UnitVectorY-Labs/gologhttpjson.svg)](https://github.com/UnitVectorY-Labs/gologhttpjson/releases/latest) [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT) [![Active](https://img.shields.io/badge/Status-Active-green)](https://guide.unitvectorylabs.com/bestpractices/status/#active) [![Go Report Card](https://goreportcard.com/badge/github.com/UnitVectorY-Labs/gologhttpjson)](https://goreportcard.com/report/github.com/UnitVectorY-Labs/gologhttpjson)
+[![GitHub release](https://img.shields.io/github/release/UnitVectorY-Labs/gologhttpjson.svg)](https://github.com/UnitVectorY-Labs/gologhttpjson/releases/latest) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Active](https://img.shields.io/badge/Status-Active-green)](https://guide.unitvectorylabs.com/bestpractices/status/#active) [![Go Report Card](https://goreportcard.com/badge/github.com/UnitVectorY-Labs/gologhttpjson)](https://goreportcard.com/report/github.com/UnitVectorY-Labs/gologhttpjson)
 
 # gologhttpjson
 
