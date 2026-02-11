@@ -5,8 +5,12 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"strings"
 )
+
+// Version is the application version, injected at build time via ldflags
+var Version = "dev"
 
 type LogEntry struct {
 	Body     json.RawMessage   `json:"body"`
@@ -75,12 +79,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	os.Stdout.Write(logJSON)
 	os.Stdout.WriteString("\n")
 
+	// Add application version to X-App-Version header
+	w.Header().Set("X-App-Version", Version)
+
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("OK\n"))
 }
 
 func main() {
+	// Set the build version from the build info if not set by the build system
+	if Version == "dev" || Version == "" {
+		if bi, ok := debug.ReadBuildInfo(); ok {
+			if bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+				Version = bi.Main.Version
+			}
+		}
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080" // Default port if not specified
