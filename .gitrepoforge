@@ -1,0 +1,12 @@
+name: gologhttpjson
+default_branch: main
+config:
+  description: "A lightweight HTTP server that logs HTTP requests containing JSON payloads, with optional header logging and environment-based metadata."
+  license: MIT
+  language: go
+  release: docker-go
+  justfile: false
+  release_github: true
+  status: active
+  codecov:
+    enabled: false
