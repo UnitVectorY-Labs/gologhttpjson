@@ -10,3 +10,4 @@ config:
   status: active
   codecov:
     enabled: false
+  osv: sarif
