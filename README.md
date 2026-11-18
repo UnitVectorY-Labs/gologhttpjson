@@ -24,7 +24,7 @@ docker run -p 8080:8080 ghcr.io/unitvectory-labs/gologhttpjson:latest
 
 ## Example Log Output
 
-All responses return an HTTP 200 status code with a body of `OK`. This application is designed to log request payloads for inspection.
+Valid JSON POST requests return HTTP 200 with a body of `OK`. Invalid JSON returns HTTP 400; this includes duplicate object names and invalid UTF-8 or Unicode escape sequences. This application is designed to log request payloads for inspection.
 
 The log output is structured as JSON with the following attributes:
 
