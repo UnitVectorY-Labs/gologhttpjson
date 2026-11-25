@@ -8,6 +8,4 @@ config:
   justfile: false
   release_github: true
   status: active
-  codecov:
-    enabled: false
   osv: sarif
