@@ -1,7 +1,8 @@
 package main
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"io"
 	"net/http"
 	"os"
@@ -13,7 +14,7 @@ import (
 var Version = "dev"
 
 type LogEntry struct {
-	Body     json.RawMessage   `json:"body"`
+	Body     jsontext.Value    `json:"body"`
 	Headers  map[string]string `json:"headers,omitempty"`
 	Metadata map[string]string `json:"metadata,omitempty"`
 	Path     string            `json:"path"`
@@ -34,8 +35,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate that the body is valid JSON
-	var jsonBody json.RawMessage
-	if err := json.Unmarshal(body, &jsonBody); err != nil {
+	jsonBody := jsontext.Value(body)
+	if !jsonBody.IsValid() {
 		http.Error(w, "Request body must be valid JSON", http.StatusBadRequest)
 		return
 	}
